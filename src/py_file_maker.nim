@@ -54,3 +54,21 @@ when isMainModule:
   #         echo "option and value: ", p.key, ", ", p.val
   #   of cmdArgument:
   #     echo "arguments: ", p.key
+#!/usr/bin/python3
+
+
+# def main(name):
+#  """ brief function description
+#      
+#     Args:
+#         name: return name
+#     Raises:
+#          ValueError: when name is not a string
+# """
+#    name_charaters = len(name)
+#    greeting = f"hello, {name}.\n your name has {name_characters} characters.
+#    return len(name)
+
+
+# if __name__ == "__main__":
+#     main(name)
