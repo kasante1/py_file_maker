@@ -2,36 +2,36 @@
 # uses this file as the main entry point of the application.
 # import std/parseopt
 import  docopt
+import strutils
+
 const doc = """
-CoolSeq - a program to do things
+PyFileMaker! - create files for python programming
 
 Usage:
-  args_docopt status
-  args_docopt list
-  args_docopt analyse <directory> <database> [-o|--output=<outputFile>]
+  PyFileMaker! file <filename>...
+  PyFileMaker! [dir] <directory> file <filename>
+  PyFileMaker! [-v | --version] 
+  PyFileMaker! [-h | --help]
 
 Options:
-  status                      Check API Status
-  list                        Check Result List
-  convert                     Upload Images, convert to PDF and download result.pdf
-  <directory>                 Specify directory with input files
-  <database>                  Reference database
-  -o, --output=<outputFile>   Output filename [default: result.bam]
+  dir    Create file(s) in this directory
+  -v --version      Show version
+
+
 """
 
 proc main() =
   # This is needed to parse the docstring into the "args" object
-  let args = docopt(doc, version = "1.0")
+  let args = docopt(doc, version = "PyFileMaker! 0.1.0")
 
-  if args["status"]:
-    echo "So you want to know the status! OK!"
-  if args["list"]:
-    echo "This is the list... finished!"
-  if args["analyse"]:
-    echo "CONVERTING:"
-    echo "Directory: ", $args["<directory>"]
-    echo "Reference: ", $args["<database>"]
-    echo "Output:    ", $args["--output"] # note the default!
+  if args["file"]:
+     for files in @(args["<filename>"]):
+       echo "creates $#" % files
+
+  elif args["dir"] and args["file"]:
+    echo "directory! :", $args["<directory>"], " file :", $args["<filename>"]
+
+
 
 when isMainModule:
   main()
@@ -68,6 +68,22 @@ when isMainModule:
 #    name_charaters = len(name)
 #    greeting = f"hello, {name}.\n your name has {name_characters} characters.
 #    return len(name)
+
+
+# class Aclass:
+# """ doc string here """
+#     def __init__(self, initializer):
+#         self.initializer = initializer
+#     
+#     def action(walk, jump):
+#         """
+#          Do something
+#
+#         :parm walk: str walk
+#         :param jump str jump
+#          
+#         """
+#          actions = f" {walk} and {jump} "
 
 
 # if __name__ == "__main__":
