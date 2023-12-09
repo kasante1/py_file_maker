@@ -1,7 +1,13 @@
-# py_maker
+# PyFileMaker! - create files for python programming
 
 ###    create python file templates
 
+    Usage:
+        PyFileMaker! file <filename>...
+        PyFileMaker! [dir] <directory> file <filename>
+        PyFileMaker! [-v | --version]
+        PyFileMaker! [-h | --help]
 
-    usage: py_maker <filename> | <filenames>
-
+    Options:
+        dir    Create file(s) in this directory
+        -v --version      Show version
