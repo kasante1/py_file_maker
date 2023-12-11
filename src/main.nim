@@ -9,12 +9,15 @@ PyFileMaker! - create files for python programming
 
 Usage:
   PyFileMaker! <filename>...
+  PyFileMaker! [-d | --directory <directory>] [-f | --file <files>...]
   PyFileMaker! [-v | --version] 
   PyFileMaker! [-h | --help]
 
 Options:
-  -h --help         Show this message
-  -v --version      Show version
+  -d, --directory    Create files in this directory
+  -f, --file         Supply filename(s)
+  -h, --help         Show this message
+  -v, --version      Show version
 
 
 """
@@ -31,8 +34,8 @@ proc main() =
   if args["<filename>"]:
      for files in @(args["<filename>"]):
        echo "creates $#" % files    
-  # elif args["d"] or args["directory"]:
-  #   echo "directory! :", $args["<directory>"], " file :", $args["<filename>"]
+  elif args["--directory"] and args["--file"]:
+    echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
 
 
 
