@@ -8,13 +8,12 @@ const doc = """
 PyFileMaker! - create files for python programming
 
 Usage:
-  PyFileMaker! file <filename>...
-  PyFileMaker! [dir] <directory> file <filename>
+  PyFileMaker! <filename>...
   PyFileMaker! [-v | --version] 
   PyFileMaker! [-h | --help]
 
 Options:
-  dir    Create file(s) in this directory
+  -h --help         Show this message
   -v --version      Show version
 
 
@@ -24,12 +23,16 @@ proc main() =
   # This is needed to parse the docstring into the "args" object
   let args = docopt(doc, version = "PyFileMaker! 0.1.0")
 
-  if args["file"]:
-     for files in @(args["<filename>"]):
-       echo "creates $#" % files
+  # if args["file"] or args["-f"]:
+  #    for files in @(args["<filename>"]):
+  #      echo "creates $#" % files    
 
-  elif args["dir"] and args["file"]:
-    echo "directory! :", $args["<directory>"], " file :", $args["<filename>"]
+
+  if args["<filename>"]:
+     for files in @(args["<filename>"]):
+       echo "creates $#" % files    
+  # elif args["d"] or args["directory"]:
+  #   echo "directory! :", $args["<directory>"], " file :", $args["<filename>"]
 
 
 
