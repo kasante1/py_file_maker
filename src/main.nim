@@ -3,6 +3,8 @@
 # import std/parseopt
 import  docopt
 import strutils
+from writer import createFiles
+from validator import validateDirFile 
 
 const doc = """
 PyFileMaker! - create files for python programming
@@ -10,7 +12,7 @@ PyFileMaker! - create files for python programming
 Usage:
   PyFileMaker! <filename>...
   PyFileMaker! [-d | --directory <directory>] [-f | --file <files>...]
-  PyFileMaker! [-v | --version] 
+  PyFileMaker! [-v | --version]
   PyFileMaker! [-h | --help]
 
 Options:
@@ -26,71 +28,28 @@ proc main() =
   # This is needed to parse the docstring into the "args" object
   let args = docopt(doc, version = "PyFileMaker! 0.1.0")
 
-  # if args["file"] or args["-f"]:
-  #    for files in @(args["<filename>"]):
-  #      echo "creates $#" % files    
-
-
   if args["<filename>"]:
      for files in @(args["<filename>"]):
-       echo "creates $#" % files    
-  elif args["--directory"] and args["--file"]:
-    echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
+       echo "creates $#" % files      
+       let (pathExists, argsPath) = validateDirFile(files)
 
+       if pathExists == false:
+         let t: string = createFiles(argsPath)
+         echo t
+
+
+  elif args["--directory"] and args["--file"]:
+     echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
+
+     for file in @(args["<files>"]):
+       echo "creates $#" % file      
+       let (pathExists, argsPath) = validateDirFile(file, $args["<directory>"])
+
+       if pathExists == false:
+         let t = createFiles(argsPath)
+         echo t
 
 
 when isMainModule:
   main()
-# when isMainModule:
-  # echo("Hello, World!")
 
-  # var p = initOptParser("-a c -e:5 --foo --bar=20 file.txt")
-
-  # while true:
-  #   p.next()
-
-  #   case p.kind
-  #   of cmdEnd: break
-  #   of cmdShortOption:
-  #     echo "short options -> ", p.key, ",", p.val
-  #   of cmdLongOption:
-  #     if p.val == "":
-  #       echo "option: ", p.key
-  #     else:
-  #         echo "option and value: ", p.key, ", ", p.val
-  #   of cmdArgument:
-  #     echo "arguments: ", p.key
-#!/usr/bin/python3
-
-
-# def main(name):
-#  """ brief function description
-#      
-#     Args:
-#         name: return name
-#     Raises:
-#          ValueError: when name is not a string
-# """
-#    name_charaters = len(name)
-#    greeting = f"hello, {name}.\n your name has {name_characters} characters.
-#    return len(name)
-
-
-# class Aclass:
-# """ doc string here """
-#     def __init__(self, initializer):
-#         self.initializer = initializer
-#     
-#     def action(walk, jump):
-#         """
-#          Do something
-#
-#         :parm walk: str walk
-#         :param jump str jump
-#          
-#         """
-#          actions = f" {walk} and {jump} "
-
-
-# if __name__ == "__main__":
-#     main(name)
