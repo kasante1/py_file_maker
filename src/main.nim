@@ -3,6 +3,8 @@
 # import std/parseopt
 import  docopt
 import strutils
+import std/os
+
 from writer import createFiles
 from validator import validateDirFile 
 
@@ -29,26 +31,25 @@ proc main() =
   let args = docopt(doc, version = "PyFileMaker! 0.1.0")
 
   if args["<filename>"]:
-     for files in @(args["<filename>"]):
-       echo "creates $#" % files      
-       let (pathExists, argsPath) = validateDirFile(files)
+    for files in @(args["<filename>"]):
+      echo "creates $#" % files      
+      let (pathExists, argsPath) = validateDirFile(files)
 
-       if pathExists == false:
-         let t: string = createFiles(argsPath)
-         echo t
+      if pathExists == false and os.isValidFilename(argsPath) == true:
+        createFiles(argsPath, "hello")
 
 
   elif args["--directory"] and args["--file"]:
-     echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
+    echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
 
-     for file in @(args["<files>"]):
-       echo "creates $#" % file      
-       let (pathExists, argsPath) = validateDirFile(file, $args["<directory>"])
+    for file in @(args["<files>"]):
+      echo "creates $#" % file      
+      let (pathExists, argsPath) = validateDirFile(file, $args["<directory>"])
 
-       if pathExists == false:
-         let t = createFiles(argsPath)
-         echo t
-
+      if pathExists == false and os.isValidFilename(argsPath) == true:
+        echo "argPath" & argsPath
+        createFiles(argsPath, "hello world!")
+        
 
 when isMainModule:
   main()

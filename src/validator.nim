@@ -9,16 +9,39 @@ import std/os
 proc getCwd():string =
   return os.getCurrentDir()
 
-proc validateDirFile*(args: string, argsDir = "", cwd = getCwd()):(bool, string) =
+
+
+proc validateFile*(args: string, cwd = getCwd()):(bool, string) =
+    let fileArgs: string = os.joinPath(cwd, args)
+    let filePath: string = os.addFileExt(fileArgs, "py")
+    let isFileExists: bool = os.fileExists(filePath)
+    return (isFileExists, filePath)
+
+
+proc makeDir(filePath: string): void = 
+    try:
+        os.createDir(filePath)
+    except CatchableError:
+        echo "create project directory failed"
+
+
+proc validateDirFile*(argsDir: string, cwd = getCwd()):(bool, string) =
 
   if argsDir == "":
-      let checkDirFileArgs = os.joinPath(cwd, args)
-      let isDirExists: bool = os.dirExists(checkDirFileArgs)
-      return (isDirExists, checkDirFileArgs)
+    let fileArgs: string = os.joinPath(cwd, args)
+    let (fileExists, filePath) = validateFile(fileArgs)
+    return (fileExists, filePath)
   else:
-       let checkDirFileArgs = os.joinPath(cwd, argsDir, args)
-       let isDirExists: bool = os.dirExists(checkDirFileArgs)
-       return (isDirExists, checkDirFileArgs)
+    let dirArgs = os.joinPath(cwd, argsDir)
+    let isDirExists: bool = os.dirExists(dirArgs)
+    if isDirExists == false:
+        makeDir(dirArgs)
+        let y = os.joinPath(dirArgs, args)
+        let (v, kk) = validateFile(y)
+        if v == false:
+            return (isDirExists, kk)
+
+    return (true, dirArgs)
 
 
 # func validateFile*(fileArgs: string, cwd = getCwd()):bool =
