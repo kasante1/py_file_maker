@@ -6,7 +6,8 @@ import strutils
 import std/os
 
 from writer import createFiles
-from validator import validateDirFile 
+from validator import validateDir, validateFile, makeDirectory
+from contents import pythonFileContents
 
 const doc = """
 PyFileMaker! - create files for python programming
@@ -33,23 +34,32 @@ proc main() =
   if args["<filename>"]:
     for files in @(args["<filename>"]):
       echo "creates $#" % files      
-      let (pathExists, argsPath) = validateDirFile(files)
+      let (pathExists, argsPath) = validateFile(files)
 
       if pathExists == false and os.isValidFilename(argsPath) == true:
-        createFiles(argsPath, "hello")
+        createFiles(argsPath, pythonFileContents)
 
 
   elif args["--directory"] and args["--file"]:
     echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
 
-    for file in @(args["<files>"]):
-      echo "creates $#" % file      
-      let (pathExists, argsPath) = validateDirFile(file, $args["<directory>"])
+    # for file in @(args["<files>"]):
+    # echo "creates $#" % file      
+    
+    let (pathExists, dirPath) = validateDir($args["<directory>"])
 
-      if pathExists == false and os.isValidFilename(argsPath) == true:
-        echo "argPath" & argsPath
-        createFiles(argsPath, "hello world!")
-        
+    if pathExists == false:
+      echo "argPath" & dirPath
+      makeDirectory(dirPath)
+      for file in @(args["<files>"]):
+        echo "creates $#" % file 
+        # let newFilePath = os.joinPath(dirPath, file)
+
+        let (fileExists, newFilePath) = validateFile(file, dirPath)
+        # let fileExists = os.fileExists(newFilePath)
+        if fileExists == false:
+          createFiles(newFilePath, pythonFileContents)
+
 
 when isMainModule:
   main()
