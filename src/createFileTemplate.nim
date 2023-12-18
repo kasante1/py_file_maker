@@ -15,4 +15,3 @@ proc projectFilesTemplate*(fileNames:seq): void =
                 echo "[ X ] - " & argsPath & " - exists!"
         except CatchableError as err:
             echo err.msg
-    
