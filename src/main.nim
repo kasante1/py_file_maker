@@ -1,13 +1,8 @@
-# This is just an example to get you started. A typical binary package
-# uses this file as the main entry point of the application.
-# import std/parseopt
 import  docopt
-import strutils
 import std/os
 
-from writer import createFiles
-from validator import validateDir, validateFile, makeDirectory
-from contents import pythonFileContents
+from projectTemplate import directoryTemplate
+from createFileTemplate import projectFilesTemplate
 
 const doc = """
 PyFileMaker! - create files for python programming
@@ -32,33 +27,11 @@ proc main() =
   let args = docopt(doc, version = "PyFileMaker! 0.1.0")
 
   if args["<filename>"]:
-    for files in @(args["<filename>"]):
-      echo "creates $#" % files      
-      let (pathExists, argsPath) = validateFile(files)
-
-      if pathExists == false and os.isValidFilename(argsPath) == true:
-        createFiles(argsPath, pythonFileContents)
+    projectFilesTemplate(@(args["<filename>"]))
 
 
   elif args["--directory"] and args["--file"]:
-    echo "directory! :", $args["<directory>"], " file :", $args["<files>"]
-
-    # for file in @(args["<files>"]):
-    # echo "creates $#" % file      
-    
-    let (pathExists, dirPath) = validateDir($args["<directory>"])
-
-    if pathExists == false:
-      echo "argPath" & dirPath
-      makeDirectory(dirPath)
-      for file in @(args["<files>"]):
-        echo "creates $#" % file 
-        # let newFilePath = os.joinPath(dirPath, file)
-
-        let (fileExists, newFilePath) = validateFile(file, dirPath)
-        # let fileExists = os.fileExists(newFilePath)
-        if fileExists == false:
-          createFiles(newFilePath, pythonFileContents)
+    directoryTemplate($args["<directory>"], @(args["<files>"]))
 
 
 when isMainModule:
