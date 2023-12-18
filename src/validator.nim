@@ -11,25 +11,43 @@ proc getCwd():string =
 
 
 
+func checkFileName(fileName: string): bool = 
+
+    let validateFileName = os.isValidFilename(fileName)
+    if validateFileName == false:
+      raise newException(ValueError, " [ X ] invalid filename format")
+    return validateFileName
+
+
+
+
 proc validateFile*(args: string, cwd = getCwd()):(bool, string) =
     let fileArgs: string = os.joinPath(cwd, args)
     let filePath: string = os.addFileExt(fileArgs, "py")
-    let isFileExists: bool = os.fileExists(filePath)
-    return (isFileExists, filePath)
+    
+    try:
+      let validFileName: bool = checkFileName(filePath)
+      if validFilename == true:
+        let isFileExists: bool = os.fileExists(filePath)
+        return (isFileExists, filePath)
+    except ValueError as e:
+      echo e.msg
+
 
 
 proc makeDirectory*(filePath: string): void = 
     try:
         os.createDir(filePath)
     except CatchableError:
-        echo "create project directory failed"
+        echo "[ X ] create project directory failed"
 
 
 proc validateDir*(argsDir: string, cwd = getCwd()):(bool, string) =
 
     let dirArgs = os.joinPath(cwd, argsDir)
     let isDirExists: bool = os.dirExists(dirArgs)
-    if isDirExists == false:
-      return (false, dirArgs)
-    return (true, dirArgs)
+    if isDirExists == true:
+      raise newException(ValueError, "[ X ] directory already exists!")
+    return (false, dirArgs)
+    
 

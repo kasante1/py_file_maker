@@ -1,5 +1,4 @@
 import  docopt
-import std/os
 
 from projectTemplate import directoryTemplate
 from createFileTemplate import projectFilesTemplate

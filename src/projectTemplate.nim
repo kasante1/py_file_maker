@@ -5,15 +5,20 @@ from contents import pythonFileContents
 
 
 proc directoryTemplate*(directory: string, files: seq):void =
-    
-    let (pathExists, dirPath) = validateDir(directory)
+    try:
+      let (pathExists, dirPath) = validateDir(directory)
 
-    if pathExists == false:
-      makeDirectory(dirPath)
-      for file in @(files):
+      if pathExists == false:
+        makeDirectory(dirPath)
+        for file in @(files):
+          
+          let (validFile, newFilePath) = validateFile(file, dirPath)
+          
+          if validFile == false:
+            createFiles(newFilePath, pythonFileContents)
+          else:
+            echo "[ X ] file already exists"
+    except CatchableError as err:
+      echo err.msg
         
-        let (fileExists, newFilePath) = validateFile(file, dirPath)
-        
-        if fileExists == false:
-          createFiles(newFilePath, pythonFileContents)
 

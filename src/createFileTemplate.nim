@@ -5,9 +5,14 @@ from contents import pythonFileContents
 
 
 proc projectFilesTemplate*(fileNames:seq): void = 
-    for files in fileNames:    
-      let (pathExists, argsPath) = validateFile(files)
+    for files in fileNames:
+        try:    
+            let (pathExists, argsPath) = validateFile(files)
 
-      if pathExists == false and os.isValidFilename(argsPath) == true:
-        createFiles(argsPath, pythonFileContents)
- 
+            if pathExists == false:
+                createFiles(argsPath, pythonFileContents)
+            else:
+                echo "[ X ] - " & argsPath & " - exists!"
+        except CatchableError as err:
+            echo err.msg
+    
