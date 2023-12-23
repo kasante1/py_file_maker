@@ -12,16 +12,18 @@ proc getCwd():string =
 
 
 func checkFileName(fileName: string): bool = 
-
-    let validateFileName = os.isValidFilename(fileName)
-    if validateFileName == false:
-      raise newException(ValueError, " [ X ] invalid filename format")
-    return validateFileName
-
-
+  ## check the validity of the file name format
+  let validateFileName = os.isValidFilename(fileName)
+  if validateFileName == false:
+    raise newException(ValueError, " [ X ] invalid filename format")
+  return validateFileName
 
 
-proc validateFile*(args: string, cwd = getCwd()):(bool, string) =
+
+
+proc validateFile*(args: string, cwd = getCwd(), checkFileName = checkFileName):(bool, string) =
+    ## check if the file does not conflict with a file in existence
+    ## check of the file name format is valid
     let fileArgs: string = os.joinPath(cwd, args)
     let filePath: string = os.addFileExt(fileArgs, "py")
     
